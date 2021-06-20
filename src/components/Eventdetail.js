@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react'
 import {
   useParams
 } from "react-router-dom";
+import Loader from "react-loader-spinner";
 
 
 const Eventdetail = () => {
@@ -24,9 +25,15 @@ const Eventdetail = () => {
     }, [eventID]);
 
     if(isloading === true) {
-        return <div>
-           <h1>Loading....</h1>
-        </div>
+        return <div className="mx-auto px-5 py-40 text-center flex justify-center">
+        <Loader
+        type="Puff"
+        color="#7C3AED"
+        height={50}
+        width={50}
+        timeout={5000} //3 secs
+        />
+      </div>
     }
     const {_id, title, image, description} = detail;
     const newdesc = description.split('\n').map((str,index) => <p key={index}>{str}</p>);
