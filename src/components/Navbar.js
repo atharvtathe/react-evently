@@ -22,6 +22,11 @@ const Navbar = () => {
   let newname;  
   newname = open ? "" : "hidden";
 
+  const logouthandler = () => {
+    authCtx.logout();
+    setOpen(false);
+  }
+
 
 
     return (
@@ -47,6 +52,9 @@ const Navbar = () => {
             {!isLoggedIn && <li>
               <Link to="/signup">SignUp</Link>
             </li>}
+            {isLoggedIn && <li className= "bg-purple-800 px-1 rounded">
+              <button onClick={logouthandler}>Logout</button>
+            </li>}
           </ul>
 
           <ul className="flex text-lg items-center sm:hidden">
@@ -70,6 +78,9 @@ const Navbar = () => {
             {!isLoggedIn && <li>
               <Link to="/signup" onClick={() => setOpen(false)}>SignUp</Link>
             </li>} 
+            {isLoggedIn && <li>
+              <button className= "bg-purple-800 px-1 rounded"  onClick={logouthandler}>Logout</button>
+            </li>}
           </ul>
         </div>
     )

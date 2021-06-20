@@ -5,7 +5,7 @@ import {
 
 const Card = (props) => {
 
-    return <Link to={`/${props.id}`}>
+    return <Link to={`/detail/${props.id}`}>
         <div className="flex flex-col  rounded-lg overflow-hidden shadow-2xl w-80 h-64  ">
             <div>
                 <img src={`http://localhost:5000/${props.image}`} alt={props.title} className="object-cover w-80 h-40"/>

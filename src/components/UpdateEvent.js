@@ -1,22 +1,25 @@
 import React from 'react'
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import Warning from './Warning';
 import AuthContext from './auth-context'
+import {
+  useParams
+} from "react-router-dom";
+import Loader from "react-loader-spinner";
 import { useHistory } from 'react-router-dom';
 
 
 
-const Listevent = () => {
-  const history = useHistory();
-  const [selectedFile, setSelectedFile] = useState();
-	const [isFilePicked, setIsFilePicked] = useState(false);
+const UpdateEvent = () => {
+    const history = useHistory();
+    let { eventID } = useParams();
+    const [isloading, setloading] = useState(true);
 
   const [title, Settitle] = useState('');
   const [description, Setdescription] = useState('');
 
   const [erroroftitle, Seterroroftitle] = useState(false);
   const [errorofdescription, Seterrorofdescription] = useState(false);
-  const [erroroffile, Seterroroffile] = useState(false);
 
   const [aftersubmiterr, Setaftersubmiterr] = useState(false);
   
@@ -24,11 +27,6 @@ const Listevent = () => {
 
   const authCtx = useContext(AuthContext);
 
-
-  const changeHandler = (event) => {
-		setSelectedFile(event.target.files[0]);
-		setIsFilePicked(true);
-	};
 
   const titlehandler = event => {
     Settitle(event.target.value);
@@ -47,9 +45,6 @@ const Listevent = () => {
 
   const formsubmithandler = event => {
     event.preventDefault();
-    if(isFilePicked === false) {
-      Seterroroffile(true);
-    }
 
     if(title.trim().length < 5){
       Seterroroftitle(true); 
@@ -57,24 +52,22 @@ const Listevent = () => {
     if(description.trim().length < 5){
       Seterrorofdescription(true); 
     }
-    if((title.trim().length < 5) || (description.trim().length < 5) || (isFilePicked === false)){
+    if((title.trim().length < 5) || (description.trim().length < 5)){
       return;
     }
 
-    const formData = new FormData();
-
-		formData.append('image', selectedFile);
-    formData.append('title', title);
-    formData.append('description', description);
-
     const requestOptions = {
-        method: 'POST',
+        method: 'PATCH',
         headers: { 
+            "Content-type": "application/json" ,
           'Authorization': `Bearer ${authCtx.token}`
         },
-        body: formData
+        body: JSON.stringify({
+            title : title,
+            description : description
+        })
     };
-    fetch('http://localhost:5000/api/events/event', requestOptions)
+    fetch(`http://localhost:5000/api/events/${eventID}`, requestOptions)
         .then(response => response.json())
         .then(data => {
           if(data.message){
@@ -84,14 +77,50 @@ const Listevent = () => {
             Setaftersubmiterr(true);
           }else{
             // console.log(data);
-            history.replace('/myevents')
+            history.replace('/');
           }
         });
-      }
+    }
+
+
+      useEffect(() => {
+          let mounted = true;
+        
+        const getdetails = async () => {
+        const res = await fetch(`http://localhost:5000/api/events/${eventID}`);
+        const result  = await res.json();
+        let final;
+        final = result.event;
+        Settitle(final.title);
+        Setdescription(final.description);
+        }
+
+        if(mounted) {
+            getdetails();
+            setloading(false);
+        }
+        
+        return () => {
+                mounted = false;
+        }
+
+    }, [eventID]);
 
 
 
 
+
+    if(isloading === true) {
+        return <div className="mx-auto px-5 py-10 text-center flex justify-center">
+        <Loader
+        type="Puff"
+        color="#7C3AED"
+        height={50}
+        width={50}
+        timeout={5000} //3 secs
+        />
+      </div>
+    }
 
     return <form className="pt-7 max-w-2xl mx-auto px-5" encType="multipart/form-data">
       {aftersubmiterr && <Warning message={message} delay={5000}/>}
@@ -105,14 +134,9 @@ const Listevent = () => {
     <textarea className="border py-2 px-3 text-grey-darkest focus:outline-none focus:ring-2 focus:ring-purple-800 rounded" name="description" id="description" onChange={descriptionhandler} onFocus={focushandlerdescription} value={description || ""}></textarea>
     {errorofdescription && <p className="text-red-500 text-xs">enter atleast 5 characters!</p>}
   </div>
-  <div className="flex flex-col mb-4">
-    <label className="mb-2 font-medium text-lg text-grey-darkest" htmlFor="image">Image</label>
-    <input type="file" id="image" name="image" onChange={changeHandler} accept=".jpg, .png, .jpeg" required/>
-    {erroroffile && <p className="text-red-500 text-xs">Choose image!</p>}
-  </div>
   
   <button className="block bg-purple-600 hover:bg-purple-800  text-white  text-lg mx-auto px-3 py-2 rounded" type="submit" onClick={formsubmithandler}>Submit</button>
 </form>
 }
 
-export default Listevent
+export default UpdateEvent

@@ -25,7 +25,7 @@ const Home = () => {
         color="#7C3AED"
         height={50}
         width={50}
-        timeout={1000} //3 secs
+        timeout={5000} //3 secs
         />
       </div>
     }

@@ -12,6 +12,8 @@ import Login from './components/Login'
 import Listevent from "./components/Listevent";
 import NotLoggedInevent from './components/NotLoggedInevent';
 import AuthContext from './components/auth-context'
+import Myevents from "./components/Myevents";
+import UpdateEvent from "./components/UpdateEvent";
 
 function App() {
   const authCtx = useContext(AuthContext);
@@ -28,23 +30,23 @@ function App() {
             {isLoggedIn && <Listevent />}
             {!isLoggedIn && <NotLoggedInevent />}         
           </Route>
-          <Route exact path="/myevents">
-            <h1>myevents</h1>
-          </Route>
+          {isLoggedIn && <Route exact path="/myevents">
+            <Myevents />
+          </Route>}
           <Route exact path="/login">
             <Login />
           </Route>
           <Route exact path="/signup">
             <Signup />
           </Route>
-          <Route exact path="/:eventID">
+          <Route exact path="/detail/:eventID">
             <Eventdetail />
           </Route>
-          <Route exact path="/edit/:eventID">
-            <h1>eventId edit</h1>
-          </Route>
+          {isLoggedIn && <Route exact path="/edit/:eventID">
+            <UpdateEvent />
+          </Route>}
            <Route path="*">
-            <h1>404</h1>
+            <h1 className="text-5xl mx-auto pt-5 text-center">404</h1>
           </Route>
         </Switch>
       </div>

@@ -3,8 +3,10 @@ import { useState, useContext } from 'react'
 import validator from 'validator';
 import Warning from './Warning';
 import AuthContext from './auth-context'
+import { useHistory } from 'react-router-dom';
 
 const Login = () => {
+  const history = useHistory();
   const [email, Setemail] = useState('');
   const [password, Setpassword] = useState('');
 
@@ -39,10 +41,10 @@ const Login = () => {
     if(!validator.isEmail(email.trim())){
       Seterrorofemail(true); 
     }
-    if(password.trim().length < 5){
+    if(password.trim().length < 8){
       Seterrorofpassword(true); 
     }
-    if(!validator.isEmail(email.trim()) || (password.trim().length < 5)){
+    if(!validator.isEmail(email.trim()) || (password.trim().length < 8)){
       return;
     }
     
@@ -56,12 +58,13 @@ const Login = () => {
         .then(data => {
           if(data.message){
             Setmessage(data.message);
-            console.log(data);
-            console.log(message);
+            // console.log(data);
+            // console.log(message);
             Setaftersubmiterr(true);
           }else{
-            console.log(data);
-            authCtx.login(data.token)
+            // console.log(data);
+            authCtx.login(data.token, data.userId);
+            history.replace('/');
           }
         });
 
@@ -83,7 +86,7 @@ const Login = () => {
   <div className="flex flex-col mb-4">
     <label className="mb-2 font-medium text-lg text-grey-darkest" htmlFor="password">Password</label>
     <input className="border py-2 px-3 text-grey-darkest focus:outline-none focus:ring-2 focus:ring-purple-800 rounded" type="password" name="password" id="password" onChange={passwordhandler} onFocus={focushandlerpassword} value={password || ""}/>
-    {errorofpassword && <p className="text-red-500 text-xs">enter atleast 5 characters!</p>}
+    {errorofpassword && <p className="text-red-500 text-xs">enter atleast 8 characters!</p>}
   </div>
   
   <button className="block bg-purple-600 hover:bg-purple-800  text-white  text-lg mx-auto px-3 py-2 rounded" type="submit" onClick={formsubmithandler}>Login</button>
