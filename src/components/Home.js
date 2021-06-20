@@ -8,7 +8,7 @@ const Home = () => {
     
     useEffect(() => {
         const getevents = async () => {
-        const res = await fetch('http://localhost:5000/api/events/eventslist');
+        const res = await fetch(`${process.env.REACT_APP_backend_url}/api/events/eventslist`);
         const result  = await res.json();
         let final;
         final = result.event;

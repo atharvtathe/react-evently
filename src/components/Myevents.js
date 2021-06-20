@@ -26,7 +26,7 @@ const Myevents = () => {
           'Authorization': `Bearer ${authCtx.token}`
         },
     };
-    fetch(`http://localhost:5000/api/events/${eventID}`, requestOptions)
+    fetch(`${process.env.REACT_APP_backend_url}/api/events/${eventID}`, requestOptions)
         .then(response => response.json())
         .then(data => {
           if(data.message){
@@ -52,7 +52,7 @@ const Myevents = () => {
           'Authorization': `Bearer ${authCtx.token}`
         },
         };
-        const res = await fetch(`http://localhost:5000/api/events/myevents/${authCtx.userid}`, requestOptions);
+        const res = await fetch(`${process.env.REACT_APP_backend_url}/api/events/myevents/${authCtx.userid}`, requestOptions);
         const result  = await res.json();
         // console.log(result)
         let final;
@@ -79,15 +79,16 @@ const Myevents = () => {
         />
       </div>
     }
-    return ( <div>
-        {(events.length === 0) && <p className="text-4xl mx-auto px-3 pt-10 text-center">You have no events!</p>}
-        <div className="lg:max-w-5xl mx-auto grid gap-x-4 gap-y-7 lg:grid-cols-3 lg:gap-x-7 md:grid-cols-2 md:max-w-3xl   pt-7 justify-items-center px-5" >
+    if(events.length === 0){
+        return <p className="text-4xl mx-auto px-3 pt-10 text-center">You have no events!</p>
+    }
+    return ( <div className="lg:max-w-5xl mx-auto grid gap-x-4 gap-y-7 lg:grid-cols-3 lg:gap-x-7 md:grid-cols-2 md:max-w-3xl   pt-7 justify-items-center px-5" >
             {events.map((single) => {
                 const {_id, title, image} = single;
                 // return <Card key={_id} id={_id} title={title} image={image} />
                 return <div key={_id} className="flex flex-col  rounded-lg overflow-hidden shadow-2xl w-80 h-64  ">
             <div>
-                <img src={`http://localhost:5000/${image}`} alt={title} className="object-cover w-80 h-40"/>
+                <img src={`${process.env.REACT_APP_backend_url}/${image}`} alt={title} className="object-cover w-80 h-40"/>
             </div>
             <div className="text-lg py-1 px-1 font-medium text-gray-800">{title}</div>
             <div className="flex justify-between py-2">
@@ -100,7 +101,6 @@ const Myevents = () => {
          
             })}
         </div>
-        </div> 
     )
 }
 

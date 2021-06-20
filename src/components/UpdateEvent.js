@@ -67,7 +67,7 @@ const UpdateEvent = () => {
             description : description
         })
     };
-    fetch(`http://localhost:5000/api/events/${eventID}`, requestOptions)
+    fetch(`${process.env.REACT_APP_backend_url}/api/events/${eventID}`, requestOptions)
         .then(response => response.json())
         .then(data => {
           if(data.message){
@@ -87,7 +87,7 @@ const UpdateEvent = () => {
           let mounted = true;
         
         const getdetails = async () => {
-        const res = await fetch(`http://localhost:5000/api/events/${eventID}`);
+        const res = await fetch(`${process.env.REACT_APP_backend_url}/api/events/${eventID}`);
         const result  = await res.json();
         let final;
         final = result.event;

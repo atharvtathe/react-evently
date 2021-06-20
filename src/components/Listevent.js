@@ -74,7 +74,7 @@ const Listevent = () => {
         },
         body: formData
     };
-    fetch('http://localhost:5000/api/events/event', requestOptions)
+    fetch(`${process.env.REACT_APP_backend_url}/api/events/event`, requestOptions)
         .then(response => response.json())
         .then(data => {
           if(data.message){

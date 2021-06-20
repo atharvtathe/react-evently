@@ -53,7 +53,7 @@ const Login = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: email, password : password })
     };
-    fetch('http://localhost:5000/api/users/login', requestOptions)
+    fetch(`${process.env.REACT_APP_backend_url}/api/users/login`, requestOptions)
         .then(response => response.json())
         .then(data => {
           if(data.message){
